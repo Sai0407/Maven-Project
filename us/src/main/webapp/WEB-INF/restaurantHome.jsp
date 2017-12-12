@@ -117,7 +117,7 @@
 
 	<br>
 	<h4>ADD RECIPE TO BARNCH</h4>
-	<form action="recipe_to_branch" method="post" enctype="multipart/form-data">
+	<form action="addRecipeToBranch" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="action" value="recipe_to_branch">
 		<table>
 			<tr>

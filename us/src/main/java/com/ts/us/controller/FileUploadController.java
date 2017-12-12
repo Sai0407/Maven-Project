@@ -86,6 +86,37 @@ public class FileUploadController {
 		mv.addObject("recipeList", new RecipeDAO().getRecipes());
 		return mv;
 	}
+	
+	@PostMapping("/addRecipeToBranch")
+	public ModelAndView addRecipeToBranch(@RequestParam("branch_id") String branch_id,@RequestParam("recipe_id") String recipe_id,
+			@RequestParam("price") String price,@RequestParam("recipe_image") CommonsMultipartFile commonsMultipartFile) 
+					throws UrbanspoonException {
+		
+		long branchId = 0;
+		long recipeId = 0;
+		float prices = 0;
+		String imagePath = "";
+		
+		recipeId = Long.parseLong(recipe_id);
+		branchId = Long.parseLong(branch_id);
+		prices = Float.parseFloat(price);
+		if(commonsMultipartFile != null){
+			FileUpload.upload(IMAGEPATH+"recipes", commonsMultipartFile, branchId + "_" + recipeId + ".jpg");
+			imagePath = branchId + "_" + recipeId + ".jpg";
+		}
+		/*for (FileItem fileItem : fileItemsList) {
+			if (!fileItem.isFormField()) {
+				
+				storeImage(fileItem, "recipes", imagePath);
+			}
+		}*/
+		
+		RecipeDAO recipeDAO = new RecipeDAO();
+		recipeDAO.addRecipeToBranch(recipeId, branchId, prices, imagePath);
+		ModelAndView mv = new ModelAndView("restaurantHome");
+		return mv;
+		
+	}
 
 
 }
