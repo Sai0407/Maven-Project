@@ -127,7 +127,7 @@ public class UrbanspoonController {
 		return mv;
 	}
 
-	@PostMapping("/restaurant_registration")
+	/*@PostMapping("/restaurant_registration")
 	public ModelAndView restaurantRegister(HttpServletRequest request) throws UrbanspoonException, FileUploadException {
 		ModelAndView mv = new ModelAndView("redirect:home");
 		DiskFileItemFactory diskFileItemFactory = new DiskFileItemFactory();
@@ -156,7 +156,7 @@ public class UrbanspoonController {
 			}
 		}
 		return mv;
-	}
+	}*/
 
 
 	// FeedBacks
@@ -171,7 +171,7 @@ public class UrbanspoonController {
 			loggedInUserId = (long) session.getAttribute("loggedInUserId");
 		}
 		if (loggedInUserId != 0) {
-			mv = new ModelAndView("userHome");
+			mv = new ModelAndView("branchFeedback");
 			try {
 				mv.addObject("branch", new BranchDAO().getBranch(branchId, false));
 				mv.addObject("restaurant", new RestaurantDAO().getRestaurant(restaurantId, false));
@@ -227,7 +227,7 @@ public class UrbanspoonController {
 	public ModelAndView addRecipeFeedback(@RequestParam("recipe_id") int recipeId,
 			@RequestParam("branch_id") int branchId, @RequestParam("restaurant_id") int restaurantId)
 			throws UrbanspoonException {
-		ModelAndView mv = new ModelAndView("userHome");
+		ModelAndView mv = new ModelAndView("recipeFeedback");
 		mv.addObject("restaurant", new RestaurantDAO().getRestaurant(restaurantId, false));
 		mv.addObject("branch", new BranchDAO().getBranch(branchId, false));
 		mv.addObject("recipe", new RecipeDAO().getRecipe(recipeId));

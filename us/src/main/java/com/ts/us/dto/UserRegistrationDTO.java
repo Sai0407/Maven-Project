@@ -9,6 +9,7 @@ public class UserRegistrationDTO {
 	private String password;
 	private String conformPassword;
 	private CommonsMultipartFile imagePath;
+	
 	public String getName() {
 		return name;
 	}

@@ -72,11 +72,12 @@ public class FileUploadController {
 			FileUpload.upload(IMAGEPATH+"restaurants",userRegistrationDTO.getImagePath(), restaurant.getId() + ".jpg");
 			restaurantDAO.updateLogoAddress(restaurant.getId(), restaurant.getId() + ".jpg");
 		}
+		mv.addObject("branch", new Branch());
 		return mv;
 	}
 	
 	
-	@PostMapping("/addNewBranch")
+	/*@PostMapping("/addNewBranch")
 	public ModelAndView addBranch(@RequestParam("location") String location,@RequestParam("city") String city,
 			@RequestParam("state") String state,@RequestParam("country") String country,@RequestParam("postal_code") String postal_code,
 			@RequestParam("branch_images") CommonsMultipartFile[] commonsMultipartFiles,HttpServletRequest request) throws UrbanspoonException {
@@ -90,6 +91,31 @@ public class FileUploadController {
 		branch.setCountry(country);
 		branch.setPostalCode(Integer.parseInt(postal_code));
 		
+			
+		System.out.println(branch);
+		HttpSession session = request.getSession(false);
+		
+		branch = branchDAO.insert((long)session.getAttribute("loggedInUserId"), branch);
+		if (branch.getId() != 0) {
+			int count = 1;
+			for(CommonsMultipartFile commonsMultipartFile : commonsMultipartFiles){
+				FileUpload.upload(IMAGEPATH+"branches", commonsMultipartFile, branch.getId() + "_" + count + ".jpg");
+				branchDAO.addImage(branch.getId(), branch.getId() + "_" + count + ".jpg");
+				count++;
+			}
+			
+		}
+		ModelAndView mv = new ModelAndView("restaurantHome");
+		mv.addObject("cuisineList", new CuisineDAO().getCuisines(false));
+		mv.addObject("branchList", new BranchDAO().getBranches((long)session.getAttribute("loggedInUserId") , true, true));
+		mv.addObject("recipeList", new RecipeDAO().getRecipes());
+		return mv;
+	}*/
+	
+	@PostMapping("/addMultiNewBranch")
+	public ModelAndView addBranch(@ModelAttribute("branch") Branch branch,
+			@RequestParam("branch_images") CommonsMultipartFile[] commonsMultipartFiles,HttpServletRequest request) throws UrbanspoonException {
+		List<FileItem> fileItemsList = UrbanspoonHelper.getFileItems(request);		
 			
 		System.out.println(branch);
 		HttpSession session = request.getSession(false);
@@ -128,13 +154,6 @@ public class FileUploadController {
 			FileUpload.upload(IMAGEPATH+"recipes", commonsMultipartFile, branchId + "_" + recipeId + ".jpg");
 			imagePath = branchId + "_" + recipeId + ".jpg";
 		}
-		/*for (FileItem fileItem : fileItemsList) {
-			if (!fileItem.isFormField()) {
-				
-				storeImage(fileItem, "recipes", imagePath);
-			}
-		}*/
-		
 		
 		recipeDAO.addRecipeToBranch(recipeId, branchId, prices, imagePath);
 		ModelAndView mv = new ModelAndView("restaurantHome");

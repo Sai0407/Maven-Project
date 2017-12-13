@@ -129,16 +129,42 @@
 		<div id="login">
 			<h3>Login</h3>
 			<form name="login_form" action="login" method="post">
-				Id</label> <input type="text" name="user_id"><br> <label>Password
+				<table>
+
+					<tr>
+						<td>User ID</td>
+						<td>:</td>
+						<td><input type="text" name="user_id"></td>
+					</tr>
+					<tr>
+						<td>Password</td>
+						<td>:</td>
+						<td><input type="password" name="password"></td>
+					</tr>
+					<tr>
+						<td>LoginAs</td>
+						<td>:</td>
+						<td>
+							User<input type="radio" name="loginAs" value="user"> 
+							Restaurant<input type="radio" name="loginAs" value="restaurant">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="submit" value="login">
+						</td>
+					</tr>
+				</table>
+				<!-- Id</label> <input type="text" name="user_id"><br> <label>Password
 				</label> <input type="password" name="password"><br> <label>Login
 					As</label> <input type="radio" name="loginAs" value="user"> User <input
 					type="radio" name="loginAs" value="restaurant"> Restaurant<br>
 
-				<input type="submit" value="login">
+				<input type="submit" value="login"> -->
 			</form>
 		</div>
 		<div id="user_registration_spring_form">
-			<h3>User Registration Using Spring Form</h3>
+			<h3>User Registration </h3>
 			<form:form action="user_registration_spring" modelAttribute="user"
 				method="POST">
 				<table>
@@ -180,7 +206,7 @@
 			</form:form>
 		</div>
 
-		<div id="user_registration">
+		<%-- <div id="user_registration">
 			<h3>User Register</h3>
 			<form name="user_registration_form" action="user_registration"
 				method="post">
@@ -201,7 +227,7 @@
 
 				<input type="submit" value="register">
 			</form>
-		</div>
+		</div> --%>
 
 		<div id="restaurant_registration">
 			<h3>Restaurant Register</h3>
@@ -219,12 +245,36 @@
 			
 			 <form:form action="restaurant_registration_form" modelAttribute="restaurant"
 				method="POST" enctype="multipart/form-data">
-				Name : <form:input path="name"/>
-				Registration ID : <form:input path="govtRegID"/>
-				Password : <form:input path="password"/>
-				Confirm Password : <form:input path="conformPassword"/>
-				Restaurant Logo : <form:input path="imagePath" type="file"/>
-				<input type="submit" value="submit"/>
+				<table>
+					<tr>
+						<td>Name</td>
+						<td>:</td>
+						<td><form:input path="name"/></td>	
+					</tr>
+					<tr>
+						<td>Registration ID</td>
+						<td>:</td>
+						<td><form:input path="govtRegID"/></td>	
+					</tr>
+					<tr>
+						<td>Password</td>
+						<td>:</td>
+						<td><form:input path="password"/></td>	
+					</tr>
+					<tr>
+						<td>Confirm Password</td>
+						<td>:</td>
+						<td><form:input path="conformPassword"/></td>	
+					</tr>
+					<tr>
+						<td>Restaurant Logo</td>
+						<td>:</td>
+						<td><form:input path="imagePath" type="file"/></td>	
+					</tr>
+					<tr>
+						<td><input type="submit" value="submit"/></td>
+					</tr>
+				</table>
 			</form:form> 
 		</div>
 

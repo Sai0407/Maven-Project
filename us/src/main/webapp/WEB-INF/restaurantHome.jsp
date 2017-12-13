@@ -11,8 +11,8 @@
 <body>
 
 	<h4>Branch</h4>
-	<form action="addNewBranch" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="branch"> 
+	<form action="addMultiNewBranch" method="post" enctype="multipart/form-data">
+		<!-- <input type="hidden" name="action" value="branch">  -->
 		<table>
 			<tr>
 				<td><label>Location</label></td>
@@ -37,7 +37,7 @@
 			<tr>
 				<td><label>Postal Code</label> </td>
 				<td>:</td>
-				<td><input type="text" name="postal_code"></td>
+				<td><input type="text" name="postalCode"></td>
 			</tr>
 			<tr>
 				<td><label>Branch Images</label> </td>
