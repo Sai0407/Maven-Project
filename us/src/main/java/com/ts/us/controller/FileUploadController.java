@@ -9,28 +9,34 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ts.us.dao.BranchDAO;
-import com.ts.us.dao.CuisineDAO;
-import com.ts.us.dao.RecipeDAO;
-import com.ts.us.dao.RestaurantDAO;
+import com.ts.us.daoimpl.BranchDAO;
+import com.ts.us.daoimpl.CuisineDAO;
+import com.ts.us.daoimpl.RecipeDAO;
+import com.ts.us.daoimpl.RestaurantDAO;
 import com.ts.us.dto.Branch;
 import com.ts.us.dto.Restaurant;
+import com.ts.us.dto.UserRegistrationDTO;
 import com.ts.us.exception.UrbanspoonException;
 import com.ts.us.helper.UrbanspoonHelper;
 import com.ts.us.util.FileUpload;
 
 @Controller
 public class FileUploadController {
+	@Autowired RestaurantDAO restaurantDAO;
+	@Autowired BranchDAO branchDAO;
+	@Autowired RecipeDAO recipeDAO;
 	
 	private static final String IMAGEPATH = "F:\\Maven Project\\us\\src\\main\\webapp\\Images\\";
 
-	@PostMapping("/restaurant_registrations")
+	/*@PostMapping("/restaurant_registration_form")
 	public ModelAndView restaurantRegisters(@RequestParam("name") String name,@RequestParam("govt_registration_id") String userName,
 			@RequestParam("password") String password,@RequestParam("confirm_password") String confPassword,
 			@RequestParam("registration_logo") CommonsMultipartFile commonsMultipartFile)
@@ -41,10 +47,29 @@ public class FileUploadController {
 		restaurant.setGovtRegistrationtId(userName);
 		restaurant.setName(name);
 		restaurant.setPassword(password);
-		RestaurantDAO restaurantDAO = new RestaurantDAO();
+		
 		restaurant = restaurantDAO.insert(restaurant);
 		if (restaurant.getId() != 0) {
 			FileUpload.upload(IMAGEPATH+"restaurants",commonsMultipartFile, restaurant.getId() + ".jpg");
+			restaurantDAO.updateLogoAddress(restaurant.getId(), restaurant.getId() + ".jpg");
+		}
+		return mv;
+	}*/
+	
+	
+	@PostMapping("/restaurant_registration_form")
+	public ModelAndView restaurantRegisters(@ModelAttribute("restaurant") UserRegistrationDTO userRegistrationDTO )
+					throws UrbanspoonException, FileUploadException {
+	
+		ModelAndView mv = new ModelAndView("redirect:home");
+		Restaurant restaurant = new Restaurant();
+		restaurant.setGovtRegistrationtId(userRegistrationDTO.getGovtRegID());
+		restaurant.setName(userRegistrationDTO.getName());
+		restaurant.setPassword(userRegistrationDTO.getPassword());
+		
+		restaurant = restaurantDAO.insert(restaurant);
+		if (restaurant.getId() != 0) {
+			FileUpload.upload(IMAGEPATH+"restaurants",userRegistrationDTO.getImagePath(), restaurant.getId() + ".jpg");
 			restaurantDAO.updateLogoAddress(restaurant.getId(), restaurant.getId() + ".jpg");
 		}
 		return mv;
@@ -67,7 +92,6 @@ public class FileUploadController {
 		
 			
 		System.out.println(branch);
-		BranchDAO branchDAO = new BranchDAO();
 		HttpSession session = request.getSession(false);
 		
 		branch = branchDAO.insert((long)session.getAttribute("loggedInUserId"), branch);
@@ -111,7 +135,7 @@ public class FileUploadController {
 			}
 		}*/
 		
-		RecipeDAO recipeDAO = new RecipeDAO();
+		
 		recipeDAO.addRecipeToBranch(recipeId, branchId, prices, imagePath);
 		ModelAndView mv = new ModelAndView("restaurantHome");
 		return mv;

@@ -1,11 +1,15 @@
-package com.ts.us.dao;
+package com.ts.us.daoimpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import org.springframework.stereotype.Component;
+
+import com.ts.us.dao.IServeDAO;
 import com.ts.us.exception.UrbanspoonException;
 
-public class ServeDAO {
+@Component
+public class ServeDAO implements IServeDAO{
 
 	public boolean addRecipeToBranch(long recipeId, long branchId, float price,String imagePath) {
 		Connection connection = null;

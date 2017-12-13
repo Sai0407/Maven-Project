@@ -1,4 +1,4 @@
-package com.ts.us.dao;
+package com.ts.us.daoimpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,32 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+import com.ts.us.dao.IBranchDAO;
 import com.ts.us.dto.Branch;
 import com.ts.us.exception.UrbanspoonException;
 
-public class BranchDAO {
+@Component
+public class BranchDAO implements IBranchDAO{
 
-	public boolean addImage(long branchId, String fileName) throws UrbanspoonException {
-
-		Connection connection = null;
-		PreparedStatement preparedStatement = null;
-		try {
-			connection = DAOUtility.getConnection();
-			preparedStatement = connection.prepareStatement("insert into branch_images values(?,?)");
-			preparedStatement.setLong(1, branchId);
-			preparedStatement.setString(2, fileName);
-			if (preparedStatement.executeUpdate() > 0) {
-				return true;
-			}
-		} catch (SQLException e) {
-			throw new UrbanspoonException(e.toString());
-		} finally {
-			DAOUtility.close(preparedStatement, connection);
-		}
-		return false;
-	}
-
-	public Branch insert(long restaurantId, Branch branch) throws UrbanspoonException {
+		public Branch insert(long restaurantId, Branch branch) throws UrbanspoonException {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -155,6 +139,26 @@ public class BranchDAO {
 		}
 
 		return imagesList;
+	}
+
+	@Override
+	public boolean addImage(long branchId, String fileName) throws UrbanspoonException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = DAOUtility.getConnection();
+			preparedStatement = connection.prepareStatement("insert into branch_images values(?,?)");
+			preparedStatement.setLong(1, branchId);
+			preparedStatement.setString(2, fileName);
+			if (preparedStatement.executeUpdate() > 0) {
+				return true;
+			}
+		} catch (SQLException e) {
+			throw new UrbanspoonException(e.toString());
+		} finally {
+			DAOUtility.close(preparedStatement, connection);
+		}
+		return false;
 	}
 
 }

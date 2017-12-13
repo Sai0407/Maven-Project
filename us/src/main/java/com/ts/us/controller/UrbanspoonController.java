@@ -12,6 +12,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,13 +23,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ts.us.dao.BranchDAO;
-import com.ts.us.dao.CuisineDAO;
-import com.ts.us.dao.FeedbackDAO;
-import com.ts.us.dao.FeedbackTypeDAO;
-import com.ts.us.dao.RecipeDAO;
-import com.ts.us.dao.RestaurantDAO;
-import com.ts.us.dao.UserDAO;
+import com.ts.us.daoimpl.BranchDAO;
+import com.ts.us.daoimpl.CuisineDAO;
+import com.ts.us.daoimpl.FeedbackDAO;
+import com.ts.us.daoimpl.FeedbackTypeDAO;
+import com.ts.us.daoimpl.RecipeDAO;
+import com.ts.us.daoimpl.RestaurantDAO;
+import com.ts.us.daoimpl.UserDAO;
 import com.ts.us.dto.Branch;
 import com.ts.us.dto.Cuisine;
 import com.ts.us.dto.Feedback;
@@ -36,6 +37,7 @@ import com.ts.us.dto.FeedbackType;
 import com.ts.us.dto.Recipe;
 import com.ts.us.dto.Restaurant;
 import com.ts.us.dto.User;
+import com.ts.us.dto.UserRegistrationDTO;
 import com.ts.us.exception.UrbanspoonException;
 import com.ts.us.helper.UrbanspoonHelper;
 import com.ts.us.util.DateUtility;
@@ -43,6 +45,13 @@ import com.ts.us.util.DateUtility;
 @Controller
 public class UrbanspoonController {
 
+	@Autowired RestaurantDAO restaurantDAO;
+	@Autowired BranchDAO branchDAO;
+	@Autowired RecipeDAO recipeDAO;
+	@Autowired UserDAO userDAO;
+	@Autowired FeedbackDAO feedbackDAO;
+	@Autowired CuisineDAO cuisineDAO;
+	
 	
 	private static final String IMAGESLOCATION = "//Users//suveen//Documents//EclipseWorkspace//Restaurant-Ratings//us//src//main//webapp//images";
 	// Linux Path
@@ -54,9 +63,9 @@ public class UrbanspoonController {
 		ModelAndView mv = null;
 		try {
 			mv = new ModelAndView("home");
-			RestaurantDAO restaurantDAO = new RestaurantDAO();
 			List<Restaurant> restaurantsList = restaurantDAO.getRestaurants(true);
 			md.addAttribute("user", new User());
+			md.addAttribute("restaurant", new UserRegistrationDTO());
 			mv.addObject("restaurantsList", restaurantsList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -70,7 +79,6 @@ public class UrbanspoonController {
 		HttpSession session = request.getSession();
 		ModelAndView mv = null;
 		if (loginAs != null && loginAs.equals("user")) {
-			UserDAO userDAO = new UserDAO();
 			User user = userDAO.getUser(user_id);
 			if (user != null && user.getPassword().equals(password)) {
 				session.setAttribute("loggedInUser", user);
@@ -79,7 +87,6 @@ public class UrbanspoonController {
 				mv.addObject("restaurantsList", new RestaurantDAO().getRestaurants(true));
 			}
 		} else if (loginAs != null && loginAs.equals("restaurant")) {
-			RestaurantDAO restaurantDAO = new RestaurantDAO();
 			Restaurant restaurant = restaurantDAO.getRestaurant(user_id, false);
 			if (restaurant != null && restaurant.getPassword().equals(password)) {
 				session.setAttribute("loggedInUser", restaurant);
@@ -89,7 +96,6 @@ public class UrbanspoonController {
 			}
 		} else {
 			mv = new ModelAndView("home");
-			RestaurantDAO restaurantDAO = new RestaurantDAO();
 			List<Restaurant> restaurantsList = restaurantDAO.getRestaurants(true);
 			mv.addObject("restaurantsList", restaurantsList);
 		}
@@ -97,7 +103,7 @@ public class UrbanspoonController {
 		return mv;
 	}
 
-	@PostMapping("/user_registration")
+	/*@PostMapping("/user_registration")
 	public ModelAndView registerUser(@RequestParam("first_name") String firstName,
 			@RequestParam("last_name") String lastName, @RequestParam("email") String email,
 			@RequestParam("password") String password, @RequestParam("gender") String gender,
@@ -112,11 +118,10 @@ public class UrbanspoonController {
 		UserDAO userDAO = new UserDAO();
 		user = userDAO.insert(user);
 		return mv;
-	}
+	}*/
 
 	@PostMapping("/user_registration_spring")
 	public ModelAndView springRegisterUser(@ModelAttribute("user") User user) throws UrbanspoonException{
-		UserDAO userDAO = new UserDAO();
 		user = userDAO.insert(user);
 		ModelAndView mv = new ModelAndView("redirect:home");
 		return mv;
@@ -178,7 +183,6 @@ public class UrbanspoonController {
 			mv.addObject("feedback", new Feedback());
 		} else {
 			mv = new ModelAndView("home");
-			RestaurantDAO restaurantDAO = new RestaurantDAO();
 			List<Restaurant> restaurantsList = null;
 
 			try {
@@ -213,7 +217,6 @@ public class UrbanspoonController {
 		System.out.println(requestParams.get("visited_Date"));
 		feedback.setVisitedDate(DateUtility.convertStringToDate(requestParams.get("visited_Date")));
 		feedback.setFeedbackDate(new Date());
-		FeedbackDAO feedbackDAO = new FeedbackDAO();
 		feedback = feedbackDAO.insertBranchFeedback(feedback);
 		mv.addObject("restaurantsList", new RestaurantDAO().getRestaurants(true));
 		return mv;
@@ -252,7 +255,6 @@ public class UrbanspoonController {
 		feedback.setRatings(Integer.parseInt(reqParams.get("rating")));
 		feedback.setVisitedDate(DateUtility.convertStringToDate(reqParams.get("visited_Date")));
 		feedback.setFeedbackDate(new Date());
-		FeedbackDAO feedbackDAO = new FeedbackDAO();
 		feedback = feedbackDAO.insertRecipeFeedback(feedback);
 		mv.addObject("restaurantsList", new RestaurantDAO().getRestaurants(true));
 		return mv;
@@ -284,7 +286,6 @@ public class UrbanspoonController {
 			}
 		}
 		System.out.println(branch);
-		BranchDAO branchDAO = new BranchDAO();
 		branch = branchDAO.insert(getLoggedUserId(request), branch);
 		if (branch.getId() != 0) {
 			int count = 0;
@@ -306,7 +307,6 @@ public class UrbanspoonController {
 		Cuisine cuisine = new Cuisine();
 		cuisine.setName(name);
 		cuisine.setCountry(country);
-		CuisineDAO cuisineDAO = new CuisineDAO();
 		cuisine = cuisineDAO.insert(cuisine);
 		ModelAndView mv = new ModelAndView("restaurantHome");
 		return mv;
@@ -324,7 +324,6 @@ public class UrbanspoonController {
 			recipe.setVeg(false);
 		}
 		int cuisineId = Integer.parseInt(requestParams.get("cuisine_id"));
-		RecipeDAO recipeDAO = new RecipeDAO();
 		recipe = recipeDAO.insert(cuisineId, recipe);
 		ModelAndView mv = new ModelAndView("restaurantHome");
 		mv = addRestaurantObjects(mv, request);
@@ -359,7 +358,6 @@ public class UrbanspoonController {
 			}
 		}
 		
-		RecipeDAO recipeDAO = new RecipeDAO();
 		recipeDAO.addRecipeToBranch(recipeId, branchId, price, imagePath);
 		ModelAndView mv = new ModelAndView("restaurantHome");
 		mv = addRestaurantObjects(mv, request);

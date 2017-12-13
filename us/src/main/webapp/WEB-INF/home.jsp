@@ -205,7 +205,7 @@
 
 		<div id="restaurant_registration">
 			<h3>Restaurant Register</h3>
-			 <form name="restaurant_registration_form" method="post"
+			 <%-- <form name="restaurant_registration_form" method="post"
 				action="restaurant_registrations" enctype="multipart/form-data">
 				<input type="hidden" name="action" value="restaurant_registration">
 				<label>Name</label><input type="text" name="name"> <label>Government
@@ -215,17 +215,17 @@
 					type="password" name="password"> <label>Confirm
 					Password</label><input type="password" name="confirm_password"> <input
 					type="submit" value="register">
-			</form> 
+			</form> --%> 
 			
-			<%-- <form:form action="restaurant_registrations" modelAttribute="restaurant"
+			 <form:form action="restaurant_registration_form" modelAttribute="restaurant"
 				method="POST" enctype="multipart/form-data">
 				Name : <form:input path="name"/>
-				Registration ID : <form:input path="govt_reg_id"/>
+				Registration ID : <form:input path="govtRegID"/>
 				Password : <form:input path="password"/>
-				Confirm Password : <form:input path="conform_password"/>
+				Confirm Password : <form:input path="conformPassword"/>
 				Restaurant Logo : <form:input path="imagePath" type="file"/>
 				<input type="submit" value="submit"/>
-			</form:form> --%>
+			</form:form> 
 		</div>
 
 

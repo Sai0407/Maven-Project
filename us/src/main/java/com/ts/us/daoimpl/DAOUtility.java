@@ -1,4 +1,4 @@
-package com.ts.us.dao;
+package com.ts.us.daoimpl;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
