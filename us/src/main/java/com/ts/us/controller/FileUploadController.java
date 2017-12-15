@@ -1,5 +1,4 @@
 package com.ts.us.controller;
-import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,8 +6,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,22 +14,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ts.us.dao.IBranchDAO;
+import com.ts.us.dao.IRecipeDAO;
+import com.ts.us.dao.IRestaurantDAO;
 import com.ts.us.daoimpl.BranchDAO;
 import com.ts.us.daoimpl.CuisineDAO;
 import com.ts.us.daoimpl.RecipeDAO;
-import com.ts.us.daoimpl.RestaurantDAO;
 import com.ts.us.dto.Branch;
 import com.ts.us.dto.Restaurant;
-import com.ts.us.dto.UserRegistrationDTO;
 import com.ts.us.exception.UrbanspoonException;
 import com.ts.us.helper.UrbanspoonHelper;
 import com.ts.us.util.FileUpload;
 
 @Controller
 public class FileUploadController {
-	@Autowired RestaurantDAO restaurantDAO;
-	@Autowired BranchDAO branchDAO;
-	@Autowired RecipeDAO recipeDAO;
+	@Autowired IRestaurantDAO restaurantDAO;
+	@Autowired IBranchDAO branchDAO;
+	@Autowired IRecipeDAO recipeDAO;
 	
 	private static final String IMAGEPATH = "F:\\Maven Project\\us\\src\\main\\webapp\\Images\\";
 
@@ -58,18 +56,15 @@ public class FileUploadController {
 	
 	
 	@PostMapping("/restaurant_registration_form")
-	public ModelAndView restaurantRegisters(@ModelAttribute("restaurant") UserRegistrationDTO userRegistrationDTO )
+	public ModelAndView restaurantRegisters(@ModelAttribute("restaurant") Restaurant restaurant,@RequestParam("registration_logo") CommonsMultipartFile file)
 					throws UrbanspoonException, FileUploadException {
 	
 		ModelAndView mv = new ModelAndView("redirect:home");
-		Restaurant restaurant = new Restaurant();
-		restaurant.setGovtRegistrationtId(userRegistrationDTO.getGovtRegID());
-		restaurant.setName(userRegistrationDTO.getName());
-		restaurant.setPassword(userRegistrationDTO.getPassword());
-		
+
 		restaurant = restaurantDAO.insert(restaurant);
+		System.out.println(restaurant);
 		if (restaurant.getId() != 0) {
-			FileUpload.upload(IMAGEPATH+"restaurants",userRegistrationDTO.getImagePath(), restaurant.getId() + ".jpg");
+			FileUpload.upload(IMAGEPATH+"restaurants",file, restaurant.getId() + ".jpg");
 			restaurantDAO.updateLogoAddress(restaurant.getId(), restaurant.getId() + ".jpg");
 		}
 		mv.addObject("branch", new Branch());

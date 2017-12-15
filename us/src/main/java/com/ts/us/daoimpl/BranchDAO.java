@@ -13,7 +13,7 @@ import com.ts.us.dao.IBranchDAO;
 import com.ts.us.dto.Branch;
 import com.ts.us.exception.UrbanspoonException;
 
-@Component
+//@Component
 public class BranchDAO implements IBranchDAO{
 
 		public Branch insert(long restaurantId, Branch branch) throws UrbanspoonException {
@@ -49,7 +49,7 @@ public class BranchDAO implements IBranchDAO{
 		ResultSet resultSet = null;
 		try {
 			connection = DAOUtility.getConnection();
-			preparedStatement = connection.prepareStatement("select * from branch where id = ?");
+			preparedStatement = connection.prepareStatement("select * from branch where restaurant_id = ?");
 			preparedStatement.setLong(1, restaurantId);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {

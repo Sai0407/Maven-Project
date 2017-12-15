@@ -9,9 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,9 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ts.us.dao.IBranchDAO;
+import com.ts.us.dao.IRecipeDAO;
+import com.ts.us.dao.IRestaurantDAO;
 import com.ts.us.daoimpl.BranchDAO;
 import com.ts.us.daoimpl.CuisineDAO;
 import com.ts.us.daoimpl.FeedbackDAO;
@@ -37,7 +36,6 @@ import com.ts.us.dto.FeedbackType;
 import com.ts.us.dto.Recipe;
 import com.ts.us.dto.Restaurant;
 import com.ts.us.dto.User;
-import com.ts.us.dto.UserRegistrationDTO;
 import com.ts.us.exception.UrbanspoonException;
 import com.ts.us.helper.UrbanspoonHelper;
 import com.ts.us.util.DateUtility;
@@ -45,9 +43,10 @@ import com.ts.us.util.DateUtility;
 @Controller
 public class UrbanspoonController {
 
-	@Autowired RestaurantDAO restaurantDAO;
-	@Autowired BranchDAO branchDAO;
-	@Autowired RecipeDAO recipeDAO;
+	//@Autowired RestaurantDAO restaurantDAO;
+	@Autowired IRestaurantDAO restaurantDAO;
+	@Autowired IBranchDAO branchDAO;
+	@Autowired IRecipeDAO recipeDAO;
 	@Autowired UserDAO userDAO;
 	@Autowired FeedbackDAO feedbackDAO;
 	@Autowired CuisineDAO cuisineDAO;
@@ -65,12 +64,17 @@ public class UrbanspoonController {
 			mv = new ModelAndView("home");
 			List<Restaurant> restaurantsList = restaurantDAO.getRestaurants(true);
 			md.addAttribute("user", new User());
-			md.addAttribute("restaurant", new UserRegistrationDTO());
+			md.addAttribute("restaurant", new Restaurant());
 			mv.addObject("restaurantsList", restaurantsList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return mv;
+	}
+	
+	@RequestMapping("/loginPage")
+	public ModelAndView toHomePage(){
+		return new ModelAndView("login","user",new User());
 	}
 
 	@PostMapping("/login")
@@ -78,8 +82,10 @@ public class UrbanspoonController {
 			@RequestParam("loginAs") String loginAs, HttpServletRequest request) throws UrbanspoonException {
 		HttpSession session = request.getSession();
 		ModelAndView mv = null;
+		System.out.println("Inside Post Method");
 		if (loginAs != null && loginAs.equals("user")) {
 			User user = userDAO.getUser(user_id);
+			System.out.println("Came Inside Post Method");
 			if (user != null && user.getPassword().equals(password)) {
 				session.setAttribute("loggedInUser", user);
 				session.setAttribute("loggedInUserId", user.getId());
@@ -89,6 +95,7 @@ public class UrbanspoonController {
 		} else if (loginAs != null && loginAs.equals("restaurant")) {
 			Restaurant restaurant = restaurantDAO.getRestaurant(user_id, false);
 			if (restaurant != null && restaurant.getPassword().equals(password)) {
+				System.out.println("Successfull Data");
 				session.setAttribute("loggedInUser", restaurant);
 				session.setAttribute("loggedInUserId", restaurant.getId());
 				mv = new ModelAndView("restaurantHome");

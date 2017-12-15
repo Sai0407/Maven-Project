@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
@@ -8,18 +7,23 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
 
 </head>
 <body>
 
-	<div class="page">
+	<div class="container">
 		<div class="header"></div>
 		<div>
 
 
 			<div id="restaurants">
-				<table border="1">
+				<table border="1" class="table table-light">
 					<c:forEach items="${restaurantsList}" var="restaurant">
 						<tr>
 							<td>${restaurant.id}</td>
@@ -126,7 +130,7 @@
 			</div>
 		</div>
 
-		<div id="login">
+		<div id="login" align="center">
 			<h3>Login</h3>
 			<form name="login_form" action="login" method="post">
 				<table>
@@ -145,13 +149,15 @@
 						<td>LoginAs</td>
 						<td>:</td>
 						<td>
-							User<input type="radio" name="loginAs" value="user"> 
-							Restaurant<input type="radio" name="loginAs" value="restaurant">
+							User<input type="radio" name="loginAs" value="user" style="margin: 5px;"> 
+							Restaurant<input type="radio" name="loginAs" value="restaurant" style="margin: 5px;">
 						</td>
 					</tr>
 					<tr>
+						<td></td>
+						<td></td>
 						<td>
-							<input type="submit" value="login">
+							<input type="submit" value="login" style="margin-top: 15px">
 						</td>
 					</tr>
 				</table>
@@ -200,7 +206,7 @@
 					<tr>
 						<td></td>
 						<td></td>
-						<td><input type="submit" /></td>
+						<td><input type="submit" style="margin-top: 20px;"/></td>
 					</tr>
 				</table>
 			</form:form>
@@ -229,7 +235,7 @@
 			</form>
 		</div> --%>
 
-		<div id="restaurant_registration">
+		<div id="restaurant_registration" style="margin-top: 20px;">
 			<h3>Restaurant Register</h3>
 			 <%-- <form name="restaurant_registration_form" method="post"
 				action="restaurant_registrations" enctype="multipart/form-data">
@@ -254,25 +260,27 @@
 					<tr>
 						<td>Registration ID</td>
 						<td>:</td>
-						<td><form:input path="govtRegID"/></td>	
+						<td><form:input path="govtRegistrationtId"/></td>	
 					</tr>
 					<tr>
 						<td>Password</td>
 						<td>:</td>
 						<td><form:input path="password"/></td>	
 					</tr>
-					<tr>
+					<%-- <tr>
 						<td>Confirm Password</td>
 						<td>:</td>
 						<td><form:input path="conformPassword"/></td>	
-					</tr>
+					</tr> --%>
 					<tr>
 						<td>Restaurant Logo</td>
 						<td>:</td>
-						<td><form:input path="imagePath" type="file"/></td>	
+						<td><input type="file" name="registration_logo"></td>	
 					</tr>
 					<tr>
-						<td><input type="submit" value="submit"/></td>
+						<td></td>
+						<td></td>
+						<td><input type="submit" value="submit" style="margin-top: 20px;"/></td>
 					</tr>
 				</table>
 			</form:form> 
